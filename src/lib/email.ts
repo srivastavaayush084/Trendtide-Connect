@@ -1,0 +1,170 @@
+import { createServerFn } from "@tanstack/react-start";
+import nodemailer from "nodemailer";
+import { z } from "zod";
+import { getServerConfig } from "./config.server";
+
+// Interfaces
+export interface CampaignData {
+  brandName: string;
+  website: string;
+  industry: string;
+  contact: string;
+  email: string;
+  phone: string;
+  objective: string;
+  budget: string;
+  platforms: string[];
+  categories: string[];
+  languages: string[];
+  state: string;
+  place: string;
+}
+
+export interface ContactData {
+  name: string;
+  email: string;
+  message: string;
+}
+
+// Schemas for server validation
+const campaignDataSchema = z.object({
+  brandName: z.string(),
+  website: z.string(),
+  industry: z.string(),
+  contact: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  objective: z.string(),
+  budget: z.string(),
+  platforms: z.array(z.string()),
+  categories: z.array(z.string()),
+  languages: z.array(z.string()),
+  state: z.string(),
+  place: z.string(),
+});
+
+const contactDataSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  message: z.string().min(1),
+});
+
+// Helper: Get nodemailer transport
+function getMailTransport() {
+  const config = getServerConfig();
+
+  if (!config.smtpUser || !config.smtpPass) {
+    throw new Error(
+      "SMTP credentials are not configured in environment variables.",
+    );
+  }
+
+  return nodemailer.createTransport({
+    host: config.smtpHost,
+    port: config.smtpPort,
+    secure: config.smtpPort === 465, // True for 465, false for 587
+    auth: {
+      user: config.smtpUser,
+      pass: config.smtpPass,
+    },
+  });
+}
+
+export const sendAdminNotification = createServerFn({ method: "POST" })
+  .validator(campaignDataSchema)
+  .handler(async ({ data }) => {
+    const config = getServerConfig();
+    const transport = getMailTransport();
+
+    const mailOptions = {
+      from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
+      to: config.adminEmail,
+      subject: `New Campaign Brief from ${data.brandName}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <h2 style="color: #2563EB; border-bottom: 2px solid #2563EB; padding-bottom: 10px;">New Campaign Brief Received</h2>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <tr><td style="padding: 8px 0; font-weight: bold; width: 150px;">Brand Name:</td><td>${data.brandName}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Website:</td><td><a href="${data.website}" target="_blank">${data.website}</a></td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Industry:</td><td>${data.industry}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Contact Person:</td><td>${data.contact}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Email:</td><td><a href="mailto:${data.email}">${data.email}</a></td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Phone:</td><td>${data.phone}</td></tr>
+            <tr style="border-top: 1px solid #eee;"><td colspan="2" style="padding: 10px 0;"></td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Objective:</td><td>${data.objective}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Budget:</td><td>${data.budget}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Platforms:</td><td>${data.platforms.join(", ") || "—"}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Categories:</td><td>${data.categories.join(", ") || "—"}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Languages:</td><td>${data.languages.join(", ") || "—"}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">State:</td><td>${data.state || "—"}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Place:</td><td>${data.place || "—"}</td></tr>
+          </table>
+        </div>
+      `,
+    };
+
+    return transport.sendMail(mailOptions);
+  });
+
+export const sendBrandConfirmation = createServerFn({ method: "POST" })
+  .validator(campaignDataSchema)
+  .handler(async ({ data }) => {
+    const config = getServerConfig();
+    const transport = getMailTransport();
+
+    const mailOptions = {
+      from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
+      to: data.email,
+      subject: `Campaign briefing received — TrendTide Connect`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <h2 style="color: #2563EB;">Hi ${data.contact},</h2>
+          <p>Thank you for submitting your campaign brief on TrendTide Connect!</p>
+          <p>Our team and AI-powered matching engine are already reviewing your requirements. We will analyze our database of 10,000+ verified creators to match you with the best fits.</p>
+          
+          <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #374151;">Brief Summary:</h3>
+            <ul style="padding-left: 20px; color: #4b5563;">
+              <li><strong>Brand:</strong> ${data.brandName}</li>
+              <li><strong>Objective:</strong> ${data.objective}</li>
+              <li><strong>Budget:</strong> ${data.budget}</li>
+              <li><strong>Platforms:</strong> ${data.platforms.join(", ") || "—"}</li>
+            </ul>
+          </div>
+          
+          <p>A campaign manager will reach out to you within <strong>24 hours</strong> with creator recommendations and a tailored execution roadmap.</p>
+          <p>If you have any questions in the meantime, feel free to reply directly to this email.</p>
+          
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+          <p style="font-size: 12px; color: #9ca3af;">Best regards,<br/>The TrendTide Connect Team</p>
+        </div>
+      `,
+    };
+
+    return transport.sendMail(mailOptions);
+  });
+
+export const sendContactEnquiry = createServerFn({ method: "POST" })
+  .validator(contactDataSchema)
+  .handler(async ({ data }) => {
+    const config = getServerConfig();
+    const transport = getMailTransport();
+
+    const mailOptions = {
+      from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
+      to: config.adminEmail,
+      subject: `New Contact Us Message from ${data.name}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <h2 style="color: #7C3AED; border-bottom: 2px solid #7C3AED; padding-bottom: 10px;">New Contact Enquiry</h2>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <tr><td style="padding: 8px 0; font-weight: bold; width: 120px;">Sender Name:</td><td>${data.name}</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold;">Email:</td><td><a href="mailto:${data.email}">${data.email}</a></td></tr>
+            <tr><td style="padding: 8px 0; font-weight: bold; vertical-align: top;">Message:</td><td style="white-space: pre-wrap;">${data.message}</td></tr>
+          </table>
+        </div>
+      `,
+    };
+
+    return transport.sendMail(mailOptions);
+  });
