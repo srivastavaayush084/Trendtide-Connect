@@ -102,9 +102,19 @@ async function sendMailWithResend(mailOptions: {
     throw new Error("RESEND_API_KEY is not configured or empty.");
   }
 
-  // Use RESEND_FROM_EMAIL if set, otherwise default to Resend onboarding address
-  const fromAddress =
-    process.env.RESEND_FROM_EMAIL || `"TrendTide Connect" <onboarding@resend.dev>`;
+  // Clean and sanitize sender address
+  let rawFrom = (process.env.RESEND_FROM_EMAIL || config.smtpFromEmail || "").trim();
+  rawFrom = rawFrom.replace(/^["']|["']$/g, "").trim();
+
+  let fromAddress = `"TrendTide Connect" <onboarding@resend.dev>`;
+  if (rawFrom && !rawFrom.includes("yourdomain.com")) {
+    if (rawFrom.includes("<") && rawFrom.includes(">")) {
+      fromAddress = rawFrom;
+    } else if (rawFrom.includes("@")) {
+      const senderName = (config.smtpFromName || "TrendTide Connect").replace(/["']/g, "");
+      fromAddress = `${senderName} <${rawFrom}>`;
+    }
+  }
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
