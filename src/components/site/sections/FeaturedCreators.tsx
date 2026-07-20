@@ -1,7 +1,5 @@
 import { motion } from "motion/react";
-import { SectionHead } from "./Categories";
-import { BadgeCheck, Instagram, Youtube, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { BadgeCheck, Instagram, Youtube } from "lucide-react";
 
 export const featuredCreators = [
   {
@@ -146,46 +144,57 @@ export function FeaturedCreators() {
   const duplicatedImages = [...images, ...images];
 
   return (
-    <section className="bg-black py-24 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="bg-black py-12 sm:py-16 md:py-24 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Heading */}
-        <div className="text-center mb-16">
-          <p className="text-blue-500 font-semibold uppercase tracking-wider mb-3">
+        <div className="text-center mb-10 sm:mb-16">
+          <p className="text-blue-500 font-semibold uppercase tracking-wider text-xs sm:text-sm mb-2 sm:mb-3">
             Our Collaborations
           </p>
 
-          <h2 className="text-5xl md:text-6xl font-bold text-white">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
             Creator's We've Worked With
           </h2>
 
-          <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-            Helping brands grow through influencer marketing,content creation
+          <p className="text-gray-400 mt-3 sm:mt-4 max-w-2xl mx-auto text-sm sm:text-base">
+            Helping brands grow through influencer marketing, content creation,
             and performance campaigns.
           </p>
         </div>
 
-        {/* Carousel */}
-        <div className="relative">
-          {/* Left Fade */}
-          <div className="absolute left-0 top-0 h-full w-40 z-10 bg-gradient-to-r from-black to-transparent" />
+        {/* Continuous Seamless Carousel */}
+        <div className="relative w-full overflow-hidden">
+          {/* Left Responsive Fade */}
+          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-12 sm:w-28 md:w-48 bg-gradient-to-r from-black to-transparent" />
 
-          {/* Right Fade */}
-          <div className="absolute right-0 top-0 h-full w-40 z-10 bg-gradient-to-l from-black to-transparent" />
+          {/* Right Responsive Fade */}
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-12 sm:w-28 md:w-48 bg-gradient-to-l from-black to-transparent" />
 
-          <motion.div className="flex gap-6 marquee" aria-hidden="true">
-            {duplicatedImages.map((image, index) => (
-              <div
-                key={index}
-                className={`min-w-[220px] h-[160px] rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 hover:-translate-y-2 hover:scale-105 transition-all duration-500 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(255,255,255,0.12)] group`}
-              >
-                <img
-                  src={image}
-                  alt={`Brand ${index + 1}`}
-                  className="w-full h-full object-cover opacity-75 group-hover:opacity-100 transition-all duration-500"
-                />
-              </div>
-            ))}
-          </motion.div>
+          <div className="flex w-full overflow-hidden">
+            <motion.div
+              className="flex min-w-full shrink-0 gap-3 sm:gap-4 md:gap-6 items-center pr-3 sm:pr-4 md:pr-6"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{
+                duration: 25,
+                ease: "linear",
+                repeat: Infinity,
+              }}
+            >
+              {duplicatedImages.map((image, index) => (
+                <div
+                  key={index}
+                  className="min-w-[150px] h-[110px] sm:min-w-[190px] sm:h-[140px] md:min-w-[240px] md:h-[170px] rounded-2xl sm:rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 shrink-0 hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(255,255,255,0.12)] group"
+                >
+                  <img
+                    src={image}
+                    alt={`Creator ${(index % images.length) + 1}`}
+                    className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-all duration-300"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
