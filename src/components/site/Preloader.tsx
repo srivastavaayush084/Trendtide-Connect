@@ -2,11 +2,24 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 
 export function Preloader() {
+  const [shouldRun, setShouldRun] = useState(false);
   const [stage, setStage] = useState<
     "dropTrendtide" | "dropConnect" | "glow" | "reveal" | "moveNav" | "done"
   >("dropTrendtide");
 
   useEffect(() => {
+    // Run preloader ONLY on the initial site visit per session
+    if (typeof window !== "undefined") {
+      const hasSeen = sessionStorage.getItem("hasSeenPreloader");
+      if (!hasSeen) {
+        setShouldRun(true);
+        sessionStorage.setItem("hasSeenPreloader", "true");
+      } else {
+        setStage("done");
+        return;
+      }
+    }
+
     // Stage 2: Drop CONNECT (1000ms)
     const timer1 = setTimeout(() => {
       setStage("dropConnect");
@@ -41,7 +54,7 @@ export function Preloader() {
     };
   }, []);
 
-  if (stage === "done") return null;
+  if (!shouldRun || stage === "done") return null;
 
   const showConnect = stage !== "dropTrendtide";
   const isGlowing = stage === "glow" || stage === "reveal" || stage === "moveNav";
