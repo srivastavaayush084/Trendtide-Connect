@@ -23,29 +23,25 @@ export default function BrandCarousel() {
   const duplicatedLogos = [...logos, ...logos];
 
   return (
-    <section className="py-20 bg-background relative overflow-hidden">
+    <section className="py-20 bg-[#050505] overflow-hidden">
       <div className="text-center mb-12 px-4">
-        <h2 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">
-          <span className="text-gradient">50+ Brands Worked</span>
+        <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
+          <span className="text-blue-600">50+ Brand's Worked</span>
           <br />
-          With TrendTide Connect
+          With Trendtide-connect
         </h2>
-        <p className="mt-3 text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
-          Trusted by leading consumer brands, startups, and high-growth companies.
-        </p>
       </div>
 
-      <div className="relative w-full overflow-hidden py-4">
-        {/* Left Edge Fade */}
-        <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-24 sm:w-48 bg-gradient-to-r from-background to-transparent" />
+      <div className="relative w-full overflow-hidden">
+        {/* Left Fade */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-32 sm:w-48 bg-gradient-to-r from-[#050505] to-transparent" />
 
-        {/* Right Edge Fade */}
-        <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-24 sm:w-48 bg-gradient-to-l from-background to-transparent" />
+        {/* Right Fade */}
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-32 sm:w-48 bg-gradient-to-l from-[#050505] to-transparent" />
 
-        {/* Infinite Moving Marquee Track */}
         <div className="flex w-full overflow-hidden">
           <motion.div
-            className="flex min-w-full shrink-0 gap-6 sm:gap-8 items-center pr-6 sm:pr-8"
+            className="flex min-w-full shrink-0 gap-6 items-center pr-6"
             animate={{ x: ["0%", "-50%"] }}
             transition={{
               duration: 35,
@@ -56,12 +52,12 @@ export default function BrandCarousel() {
             {duplicatedLogos.map((logo, index) => (
               <div
                 key={index}
-                className="group relative flex h-24 w-48 sm:h-28 sm:w-56 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-card/50 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-card hover:shadow-glow hover:-translate-y-1"
+                className="min-w-[240px] h-[140px] bg-[#0b0b0b] rounded-full overflow-hidden shrink-0 hover:scale-105 transition-transform duration-300"
               >
                 <img
                   src={logo}
                   alt={`Brand logo ${(index % logos.length) + 1}`}
-                  className="max-h-full max-w-full object-contain filter brightness-90 contrast-125 transition-all duration-300 group-hover:scale-105 group-hover:brightness-100"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
               </div>
