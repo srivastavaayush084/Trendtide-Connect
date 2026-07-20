@@ -141,7 +141,6 @@ export function FeaturedCreators() {
     "/images/brand7.png",
     "/images/brand8.png",
     "/images/brand9.png",
-    "/images/brand10.png",
   ];
 
   const duplicatedImages = [...images, ...images];
