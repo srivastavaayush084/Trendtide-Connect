@@ -189,10 +189,12 @@ function StartCampaign() {
     }
     setSubmitting(true);
     try {
-      await Promise.all([
-        sendAdminNotification({ data }),
-        sendBrandConfirmation({ data }),
-      ]);
+      await sendAdminNotification({ data });
+      try {
+        await sendBrandConfirmation({ data });
+      } catch (confirmErr) {
+        console.warn("Brand confirmation email error:", confirmErr);
+      }
       setSubmitted(true);
     } catch (err) {
       console.error("Email send failed:", err);

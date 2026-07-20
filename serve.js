@@ -65,7 +65,7 @@ function tryServeStatic(req, res, pathname) {
 /**
  * Convert Node http.IncomingMessage into Web standard Request
  */
-function createWebRequest(req) {
+async function createWebRequest(req) {
   const host = req.headers.host || `localhost:${PORT}`;
   const protocol = req.headers["x-forwarded-proto"] || "http";
   const url = new URL(req.url || "/", `${protocol}://${host}`);
@@ -85,14 +85,11 @@ function createWebRequest(req) {
   };
 
   if (req.method !== "GET" && req.method !== "HEAD") {
-    options.body = new ReadableStream({
-      start(controller) {
-        req.on("data", (chunk) => controller.enqueue(chunk));
-        req.on("end", () => controller.close());
-        req.on("error", (err) => controller.error(err));
-      },
-    });
-    options.duplex = "half";
+    const chunks = [];
+    for await (const chunk of req) {
+      chunks.push(chunk);
+    }
+    options.body = Buffer.concat(chunks);
   }
 
   return new Request(url, options);
@@ -139,7 +136,7 @@ const server = http.createServer(async (req, res) => {
 
   // 2. Fall back to SSR handler
   try {
-    const webRequest = createWebRequest(req);
+    const webRequest = await createWebRequest(req);
     const webResponse = await handler.fetch(webRequest, {}, {});
     await sendWebResponse(res, webResponse);
   } catch (err) {

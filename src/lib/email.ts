@@ -49,6 +49,8 @@ const contactDataSchema = z.object({
   message: z.string().min(1),
 });
 
+let cachedTransport: nodemailer.Transporter | null = null;
+
 // Helper: Get nodemailer transport
 function getMailTransport() {
   const config = getServerConfig();
@@ -60,24 +62,30 @@ function getMailTransport() {
     );
   }
 
-  const isSecure = config.smtpPort === 465;
+  if (!cachedTransport) {
+    const isSecure = config.smtpPort === 465;
+    cachedTransport = nodemailer.createTransport({
+      host: config.smtpHost || "smtp.hostinger.com",
+      port: config.smtpPort || 465,
+      secure: isSecure,
+      auth: {
+        user: config.smtpUser,
+        pass: config.smtpPass,
+      },
+      pool: true,
+      maxConnections: 5,
+      maxMessages: 100,
+      connectionTimeout: 15000,
+      greetingTimeout: 15000,
+      socketTimeout: 15000,
+      dnsTimeout: 10000,
+      tls: {
+        rejectUnauthorized: false, // Prevents self-signed or proxy SSL handshake errors
+      },
+    });
+  }
 
-  return nodemailer.createTransport({
-    host: config.smtpHost || "smtp.hostinger.com",
-    port: config.smtpPort || 465,
-    secure: isSecure,
-    auth: {
-      user: config.smtpUser,
-      pass: config.smtpPass,
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-    dnsTimeout: 10000,
-    tls: {
-      rejectUnauthorized: false, // Prevents self-signed or proxy SSL handshake errors
-    },
-  });
+  return cachedTransport;
 }
 
 async function sendMailWithLogging(mailOptions: nodemailer.SendMailOptions) {
@@ -96,11 +104,11 @@ export const sendAdminNotification = createServerFn({ method: "POST" })
   .validator(campaignDataSchema)
   .handler(async ({ data }) => {
     const config = getServerConfig();
-    const transport = getMailTransport();
+    const adminTarget = config.adminEmail || config.smtpUser;
 
     const mailOptions = {
       from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
-      to: config.adminEmail,
+      to: adminTarget,
       subject: `New Campaign Brief from ${data.brandName}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
@@ -168,9 +176,10 @@ export const sendContactEnquiry = createServerFn({ method: "POST" })
   .validator(contactDataSchema)
   .handler(async ({ data }) => {
     const config = getServerConfig();
+    const adminTarget = config.adminEmail || config.smtpUser;
     const mailOptions = {
       from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
-      to: config.adminEmail,
+      to: adminTarget,
       subject: `New Contact Us Message from ${data.name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
