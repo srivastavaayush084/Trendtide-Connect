@@ -22,7 +22,7 @@ export function FinalCTA() {
         {/* Start Campaign Button Overlaid on the Image */}
         <Link
           to="/start-campaign"
-          className="absolute right-[8%] sm:right-[14%] md:right-[18%] bottom-[12%] sm:bottom-[16%] md:bottom-[20%] z-20 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 hover:from-blue-800 hover:to-purple-900 text-white border border-white/20 px-5 sm:px-8 py-2.5 sm:py-3.5 text-xs sm:text-sm font-semibold shadow-2xl hover:scale-105 transition-all duration-300"
+          className="absolute right-[8%] sm:right-[14%] md:right-[18%] bottom-[12%] sm:bottom-[16%] md:bottom-[20%] z-20 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#1e3a8a] via-[#312e81] to-[#4c1d95] hover:from-[#172554] hover:to-[#2e1065] text-white border border-white/20 px-5 sm:px-8 py-2.5 sm:py-3.5 text-xs sm:text-sm font-semibold shadow-2xl hover:scale-105 transition-all duration-300"
         >
           Start campaign <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Link>

@@ -44,7 +44,7 @@ export function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 text-white shadow-lg hover:from-blue-800 hover:to-purple-900 text-base px-8 h-12 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+                className="bg-gradient-to-r from-[#1e3a8a] via-[#312e81] to-[#4c1d95] hover:from-[#172554] hover:to-[#2e1065] text-white shadow-lg text-base px-8 h-12 rounded-xl transition-all duration-300 hover:scale-[1.02]"
               >
                 <Link to="/start-campaign">
                   Start Campaign <ArrowRight className="ml-2 h-5 w-5" />
