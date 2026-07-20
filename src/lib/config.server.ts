@@ -20,7 +20,7 @@ export function getServerConfig() {
   return {
     nodeEnv: process.env.NODE_ENV,
     smtpHost: process.env.SMTP_HOST || "smtp.hostinger.com",
-    smtpPort: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 465,
+    smtpPort: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 587,
     smtpUser: process.env.SMTP_USER,
     smtpPass: process.env.SMTP_PASS,
     smtpFromName: process.env.SMTP_FROM_NAME || "TrendTide Connect",

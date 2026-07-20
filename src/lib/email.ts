@@ -49,10 +49,10 @@ const contactDataSchema = z.object({
   message: z.string().min(1),
 });
 
-let cachedTransport: nodemailer.Transporter | null = null;
+const transportsCache: Record<number, nodemailer.Transporter> = {};
 
-// Helper: Get nodemailer transport
-function getMailTransport() {
+// Helper: Get nodemailer transport for specific port
+function getMailTransport(port: number) {
   const config = getServerConfig();
 
   if (!config.smtpUser || !config.smtpPass) {
@@ -62,12 +62,13 @@ function getMailTransport() {
     );
   }
 
-  if (!cachedTransport) {
-    const isSecure = config.smtpPort === 465;
-    cachedTransport = nodemailer.createTransport({
+  if (!transportsCache[port]) {
+    const isSecure = port === 465;
+    transportsCache[port] = nodemailer.createTransport({
       host: config.smtpHost || "smtp.hostinger.com",
-      port: config.smtpPort || 465,
+      port: port,
       secure: isSecure,
+      requireTLS: !isSecure,
       auth: {
         user: config.smtpUser,
         pass: config.smtpPass,
@@ -75,9 +76,9 @@ function getMailTransport() {
       pool: true,
       maxConnections: 5,
       maxMessages: 100,
-      connectionTimeout: 15000,
-      greetingTimeout: 15000,
-      socketTimeout: 15000,
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
       dnsTimeout: 10000,
       tls: {
         rejectUnauthorized: false, // Prevents self-signed or proxy SSL handshake errors
@@ -85,18 +86,30 @@ function getMailTransport() {
     });
   }
 
-  return cachedTransport;
+  return transportsCache[port];
 }
 
 async function sendMailWithLogging(mailOptions: nodemailer.SendMailOptions) {
+  const config = getServerConfig();
+  const primaryPort = config.smtpPort || 587;
+
   try {
-    const transport = getMailTransport();
+    const transport = getMailTransport(primaryPort);
     const info = await transport.sendMail(mailOptions);
-    console.log(`[SMTP SUCCESS] Message sent to ${mailOptions.to}. MessageId: ${info.messageId}`);
+    console.log(`[SMTP SUCCESS] Message sent to ${mailOptions.to} via port ${primaryPort}. MessageId: ${info.messageId}`);
     return info;
   } catch (err: any) {
-    console.error(`[SMTP ERROR] Failed sending email to ${mailOptions.to}:`, err?.message || err);
-    throw err;
+    console.warn(`[SMTP WARNING] Primary port ${primaryPort} failed (${err?.message || err}). Trying fallback port...`);
+    const fallbackPort = primaryPort === 465 ? 587 : 465;
+    try {
+      const fallbackTransport = getMailTransport(fallbackPort);
+      const info = await fallbackTransport.sendMail(mailOptions);
+      console.log(`[SMTP SUCCESS] Message sent via fallback port ${fallbackPort}. MessageId: ${info.messageId}`);
+      return info;
+    } catch (fallbackErr: any) {
+      console.error(`[SMTP ERROR] Both primary (${primaryPort}) and fallback (${fallbackPort}) failed for ${mailOptions.to}:`, fallbackErr?.message || fallbackErr);
+      throw fallbackErr;
+    }
   }
 }
 
