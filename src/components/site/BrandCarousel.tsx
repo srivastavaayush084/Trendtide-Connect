@@ -26,7 +26,7 @@ export default function BrandCarousel() {
     <section className="py-12 sm:py-16 md:py-20 bg-[#050505] overflow-hidden">
       <div className="text-center mb-8 sm:mb-12 px-4">
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-          <span className="text-blue-600">50+ Brand's Worked</span>
+          <span className="text-blue-600">100+ Brand's Worked</span>
           <br />
           With Trendtide-connect
         </h2>

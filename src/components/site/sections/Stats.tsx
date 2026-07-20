@@ -8,7 +8,7 @@ import {
 import { useEffect, useRef } from "react";
 
 const stats = [
-  { value: 10000, suffix: "+", label: "Verified creators" },
+  { value: 35000, suffix: "+", label: "Verified creators" },
   { value: 500, suffix: "+", label: "Campaigns executed" },
   { value: 100, suffix: "+", label: "Brand partners" },
   { value: 100, suffix: "M+", label: "Reach generated" },
