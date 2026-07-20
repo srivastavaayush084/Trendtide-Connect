@@ -238,7 +238,7 @@ export const sendBrandConfirmation = createServerFn({ method: "POST" })
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
           <h2 style="color: #2563EB;">Hi ${data.contact},</h2>
           <p>Thank you for submitting your campaign brief on TrendTide Connect!</p>
-          <p>Our team and AI-powered matching engine are already reviewing your requirements. We will analyze our database of 10,000+ verified creators to match you with the best fits.</p>
+          <p>Our team is already reviewing your requirements. We will analyze our database of 50,000+ verified creators to match you with the best fits.</p>
           
           <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0; color: #374151;">Brief Summary:</h3>
