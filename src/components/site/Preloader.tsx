@@ -58,18 +58,18 @@ export function Preloader() {
         transition={{ duration: 0.8, ease: "easeInOut" }}
         className={`fixed inset-0 z-[100] flex items-center justify-center overflow-hidden transition-all duration-1000 ${
           stage === "reveal" || stage === "moveNav"
-            ? "bg-white/80 backdrop-blur-xl"
-            : "bg-white"
+            ? "bg-[#050505]/70 backdrop-blur-xl"
+            : "bg-[#050505]"
         }`}
       >
         {/* Glow backdrop sphere */}
         <motion.div
           animate={{
             scale: isGlowing ? [1, 1.3, 1.1] : 0.8,
-            opacity: isGlowing ? 0.4 : 0,
+            opacity: isGlowing ? 0.6 : 0,
           }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="pointer-events-none absolute h-80 w-80 rounded-full bg-blue-500/25 blur-[120px]"
+          className="pointer-events-none absolute h-80 w-80 rounded-full bg-blue-600/40 blur-[120px]"
         />
 
         {/* Outer Moving Container */}
@@ -95,7 +95,7 @@ export function Preloader() {
           }}
           className="relative z-10 flex flex-col items-center justify-center text-center px-4"
         >
-          {/* Enlarge Logo icon without background */}
+          {/* Enlarged Logo icon without square background card */}
           <motion.div
             initial={{ y: "-100vh", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -110,11 +110,11 @@ export function Preloader() {
             <img
               src="/logo.png"
               alt="TrendTide Connect"
-              className="h-28 w-28 sm:h-36 sm:w-36 md:h-40 md:w-40 object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.12)]"
+              className="h-28 w-28 sm:h-36 sm:w-36 md:h-40 md:w-40 object-contain drop-shadow-[0_0_35px_rgba(59,130,246,0.4)]"
             />
           </motion.div>
 
-          {/* Word 1: TRENDTIDE Drops First (Text in Black) */}
+          {/* Word 1: TRENDTIDE Drops First */}
           <motion.div
             initial={{ y: "-100vh", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -129,15 +129,15 @@ export function Preloader() {
             <span
               className={`font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tight block transition-all duration-700 ${
                 isGlowing
-                  ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(37,99,235,0.25)]"
-                  : "text-black"
+                  ? "bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(59,130,246,0.4)]"
+                  : "text-white"
               }`}
             >
               TRENDTIDE
             </span>
           </motion.div>
 
-          {/* Word 2: CONNECT Drops Second (Text in Black) */}
+          {/* Word 2: CONNECT Drops Second */}
           {showConnect && (
             <motion.div
               initial={{ y: "-100vh", opacity: 0 }}
@@ -153,8 +153,8 @@ export function Preloader() {
               <span
                 className={`font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tight block transition-all duration-700 ${
                   isGlowing
-                    ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(37,99,235,0.25)]"
-                    : "text-black"
+                    ? "bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(59,130,246,0.4)]"
+                    : "text-white"
                 }`}
               >
                 CONNECT
