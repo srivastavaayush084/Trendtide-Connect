@@ -4,7 +4,7 @@
 
 🌐 Live Demo
 
-🔗 Website: https://connect.srivastavaayush084.workers.dev/
+🔗 Website:https://trendtideconnect.com/
 
 ## ✨ Features
 
