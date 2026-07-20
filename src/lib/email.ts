@@ -96,13 +96,15 @@ async function sendMailWithResend(mailOptions: {
   html: string;
 }) {
   const config = getServerConfig();
-  const apiKey = config.resendApiKey;
+  const apiKey = config.resendApiKey?.trim();
 
-  // Use configured sender or default to Resend onboarding sender
-  let fromAddress = config.smtpFromEmail || mailOptions.from;
-  if (!fromAddress || fromAddress.includes("yourdomain.com")) {
-    fromAddress = `"${config.smtpFromName}" <onboarding@resend.dev>`;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY is not configured or empty.");
   }
+
+  // Use RESEND_FROM_EMAIL if set, otherwise default to Resend onboarding address
+  const fromAddress =
+    process.env.RESEND_FROM_EMAIL || `"TrendTide Connect" <onboarding@resend.dev>`;
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -121,9 +123,9 @@ async function sendMailWithResend(mailOptions: {
   const resData = await response.json();
 
   if (!response.ok) {
-    console.error("[RESEND ERROR]", resData);
+    console.error("[RESEND ERROR]", response.status, resData);
     throw new Error(
-      resData?.message || resData?.name || "Failed to send email via Resend HTTP API.",
+      resData?.message || resData?.name || `Resend API error (${response.status})`,
     );
   }
 

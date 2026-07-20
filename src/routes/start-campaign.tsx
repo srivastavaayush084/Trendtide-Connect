@@ -196,10 +196,10 @@ function StartCampaign() {
         console.warn("Brand confirmation email error:", confirmErr);
       }
       setSubmitted(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Email send failed:", err);
       toast.error(
-        "Something went wrong sending your campaign. Please try again or email us directly.",
+        err?.message || "Something went wrong sending your campaign. Please try again or email us directly.",
       );
     } finally {
       setSubmitting(false);
