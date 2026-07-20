@@ -17,15 +17,6 @@ const logos = [
   "/logos/logo14.jpg",
   "/logos/logo15.jpg",
   "/logos/logo16.png",
-  "/images/brand1.png",
-  "/images/brand2.png",
-  "/images/brand3.png",
-  "/images/brand4.png",
-  "/images/brand5.png",
-  "/images/brand6.png",
-  "/images/brand7.png",
-  "/images/brand8.png",
-  "/images/brand9.png",
 ];
 
 export default function BrandCarousel() {
