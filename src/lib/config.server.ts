@@ -26,5 +26,6 @@ export function getServerConfig() {
     smtpFromName: process.env.SMTP_FROM_NAME || "TrendTide Connect",
     smtpFromEmail: process.env.SMTP_FROM_EMAIL,
     adminEmail: process.env.ADMIN_EMAIL || process.env.SMTP_USER || "",
+    resendApiKey: process.env.RESEND_API_KEY,
   };
 }

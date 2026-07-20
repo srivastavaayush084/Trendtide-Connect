@@ -89,25 +89,90 @@ function getMailTransport(port: number) {
   return transportsCache[port];
 }
 
-async function sendMailWithLogging(mailOptions: nodemailer.SendMailOptions) {
+async function sendMailWithResend(mailOptions: {
+  from?: string;
+  to: string;
+  subject: string;
+  html: string;
+}) {
   const config = getServerConfig();
+  const apiKey = config.resendApiKey;
+
+  // Use configured sender or default to Resend onboarding sender
+  let fromAddress = config.smtpFromEmail || mailOptions.from;
+  if (!fromAddress || fromAddress.includes("yourdomain.com")) {
+    fromAddress = `"${config.smtpFromName}" <onboarding@resend.dev>`;
+  }
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: fromAddress,
+      to: [mailOptions.to],
+      subject: mailOptions.subject,
+      html: mailOptions.html,
+    }),
+  });
+
+  const resData = await response.json();
+
+  if (!response.ok) {
+    console.error("[RESEND ERROR]", resData);
+    throw new Error(
+      resData?.message || resData?.name || "Failed to send email via Resend HTTP API.",
+    );
+  }
+
+  console.log(
+    `[RESEND SUCCESS] Message sent to ${mailOptions.to}. ID: ${resData?.id}`,
+  );
+  return resData;
+}
+
+async function sendMailWithLogging(mailOptions: {
+  from?: string;
+  to: string;
+  subject: string;
+  html: string;
+}) {
+  const config = getServerConfig();
+
+  // If RESEND_API_KEY is present, use Resend HTTP API (Bypasses Render Free SMTP port block)
+  if (config.resendApiKey) {
+    return sendMailWithResend(mailOptions);
+  }
+
+  // Fallback to Nodemailer SMTP
   const primaryPort = config.smtpPort || 587;
 
   try {
     const transport = getMailTransport(primaryPort);
     const info = await transport.sendMail(mailOptions);
-    console.log(`[SMTP SUCCESS] Message sent to ${mailOptions.to} via port ${primaryPort}. MessageId: ${info.messageId}`);
+    console.log(
+      `[SMTP SUCCESS] Message sent to ${mailOptions.to} via port ${primaryPort}. MessageId: ${info.messageId}`,
+    );
     return info;
   } catch (err: any) {
-    console.warn(`[SMTP WARNING] Primary port ${primaryPort} failed (${err?.message || err}). Trying fallback port...`);
+    console.warn(
+      `[SMTP WARNING] Primary port ${primaryPort} failed (${err?.message || err}). Trying fallback port...`,
+    );
     const fallbackPort = primaryPort === 465 ? 587 : 465;
     try {
       const fallbackTransport = getMailTransport(fallbackPort);
       const info = await fallbackTransport.sendMail(mailOptions);
-      console.log(`[SMTP SUCCESS] Message sent via fallback port ${fallbackPort}. MessageId: ${info.messageId}`);
+      console.log(
+        `[SMTP SUCCESS] Message sent via fallback port ${fallbackPort}. MessageId: ${info.messageId}`,
+      );
       return info;
     } catch (fallbackErr: any) {
-      console.error(`[SMTP ERROR] Both primary (${primaryPort}) and fallback (${fallbackPort}) failed for ${mailOptions.to}:`, fallbackErr?.message || fallbackErr);
+      console.error(
+        `[SMTP ERROR] Both primary (${primaryPort}) and fallback (${fallbackPort}) failed for ${mailOptions.to}:`,
+        fallbackErr?.message || fallbackErr,
+      );
       throw fallbackErr;
     }
   }
