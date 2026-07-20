@@ -54,20 +54,42 @@ function getMailTransport() {
   const config = getServerConfig();
 
   if (!config.smtpUser || !config.smtpPass) {
+    console.error("[SMTP ERROR] Missing SMTP_USER or SMTP_PASS environment variables.");
     throw new Error(
       "SMTP credentials are not configured in environment variables.",
     );
   }
 
+  const isSecure = config.smtpPort === 465;
+
   return nodemailer.createTransport({
-    host: config.smtpHost,
-    port: config.smtpPort,
-    secure: config.smtpPort === 465, // True for 465, false for 587
+    host: config.smtpHost || "smtp.hostinger.com",
+    port: config.smtpPort || 465,
+    secure: isSecure,
     auth: {
       user: config.smtpUser,
       pass: config.smtpPass,
     },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    dnsTimeout: 10000,
+    tls: {
+      rejectUnauthorized: false, // Prevents self-signed or proxy SSL handshake errors
+    },
   });
+}
+
+async function sendMailWithLogging(mailOptions: nodemailer.SendMailOptions) {
+  try {
+    const transport = getMailTransport();
+    const info = await transport.sendMail(mailOptions);
+    console.log(`[SMTP SUCCESS] Message sent to ${mailOptions.to}. MessageId: ${info.messageId}`);
+    return info;
+  } catch (err: any) {
+    console.error(`[SMTP ERROR] Failed sending email to ${mailOptions.to}:`, err?.message || err);
+    throw err;
+  }
 }
 
 export const sendAdminNotification = createServerFn({ method: "POST" })
@@ -103,15 +125,13 @@ export const sendAdminNotification = createServerFn({ method: "POST" })
       `,
     };
 
-    return transport.sendMail(mailOptions);
+    return sendMailWithLogging(mailOptions);
   });
 
 export const sendBrandConfirmation = createServerFn({ method: "POST" })
   .validator(campaignDataSchema)
   .handler(async ({ data }) => {
     const config = getServerConfig();
-    const transport = getMailTransport();
-
     const mailOptions = {
       from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
       to: data.email,
@@ -141,15 +161,13 @@ export const sendBrandConfirmation = createServerFn({ method: "POST" })
       `,
     };
 
-    return transport.sendMail(mailOptions);
+    return sendMailWithLogging(mailOptions);
   });
 
 export const sendContactEnquiry = createServerFn({ method: "POST" })
   .validator(contactDataSchema)
   .handler(async ({ data }) => {
     const config = getServerConfig();
-    const transport = getMailTransport();
-
     const mailOptions = {
       from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
       to: config.adminEmail,
@@ -166,5 +184,5 @@ export const sendContactEnquiry = createServerFn({ method: "POST" })
       `,
     };
 
-    return transport.sendMail(mailOptions);
+    return sendMailWithLogging(mailOptions);
   });
