@@ -23,9 +23,9 @@ export default function BrandCarousel() {
   const duplicatedLogos = [...logos, ...logos];
 
   return (
-    <section className="py-20 bg-[#050505] overflow-hidden">
-      <div className="text-center mb-12 px-4">
-        <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
+    <section className="py-12 sm:py-16 md:py-20 bg-[#050505] overflow-hidden">
+      <div className="text-center mb-8 sm:mb-12 px-4">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight">
           <span className="text-blue-600">50+ Brand's Worked</span>
           <br />
           With Trendtide-connect
@@ -33,15 +33,15 @@ export default function BrandCarousel() {
       </div>
 
       <div className="relative w-full overflow-hidden">
-        {/* Left Fade */}
-        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-32 sm:w-48 bg-gradient-to-r from-[#050505] to-transparent" />
+        {/* Left Fade (Responsive Width) */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-12 sm:w-28 md:w-48 bg-gradient-to-r from-[#050505] to-transparent" />
 
-        {/* Right Fade */}
-        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-32 sm:w-48 bg-gradient-to-l from-[#050505] to-transparent" />
+        {/* Right Fade (Responsive Width) */}
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-12 sm:w-28 md:w-48 bg-gradient-to-l from-[#050505] to-transparent" />
 
         <div className="flex w-full overflow-hidden">
           <motion.div
-            className="flex min-w-full shrink-0 gap-6 items-center pr-6"
+            className="flex min-w-full shrink-0 gap-3 sm:gap-4 md:gap-6 items-center pr-3 sm:pr-4 md:pr-6"
             animate={{ x: ["0%", "-50%"] }}
             transition={{
               duration: 35,
@@ -52,7 +52,7 @@ export default function BrandCarousel() {
             {duplicatedLogos.map((logo, index) => (
               <div
                 key={index}
-                className="min-w-[240px] h-[140px] bg-[#0b0b0b] rounded-full overflow-hidden shrink-0 hover:scale-105 transition-transform duration-300"
+                className="min-w-[150px] h-[90px] sm:min-w-[190px] sm:h-[110px] md:min-w-[240px] md:h-[140px] bg-[#0b0b0b] rounded-full overflow-hidden shrink-0 hover:scale-105 transition-transform duration-300"
               >
                 <img
                   src={logo}
