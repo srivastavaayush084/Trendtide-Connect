@@ -21,7 +21,6 @@ export function Hero() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
-          
           {/* Left Column: Headline & Action */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -31,7 +30,8 @@ export function Hero() {
           >
             <h1 className="font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
               India's fastest{" "}
-              <span className="text-gradient">influencer marketing</span> platform
+              <span className="text-gradient">influencer marketing</span>{" "}
+              platform
             </h1>
 
             <p className="mt-6 max-w-xl text-base sm:text-lg text-muted-foreground">
@@ -54,10 +54,12 @@ export function Hero() {
 
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
               <span className="flex items-center gap-2 font-medium">
-                <BadgeCheck className="h-4 w-4 text-primary" /> 35,000+ verified creators
+                <BadgeCheck className="h-4 w-4 text-primary" /> 35,000+ verified
+                creators
               </span>
               <span className="flex items-center gap-2 font-medium">
-                <TrendingUp className="h-4 w-4 text-secondary" /> 100M+ reach generated
+                <TrendingUp className="h-4 w-4 text-secondary" /> 100M+ reach
+                generated
               </span>
               <span className="flex items-center gap-2 font-medium">
                 <Users className="h-4 w-4 text-accent" /> 100+ brand partners
@@ -77,7 +79,6 @@ export function Hero() {
 
             {/* Main Interactive Dashboard Card */}
             <div className="relative w-full max-w-md rounded-3xl border border-white/10 bg-card/60 p-6 backdrop-blur-xl shadow-2xl">
-              
               {/* Header Status */}
               <div className="flex items-center justify-between border-b border-border/50 pb-4">
                 <div className="flex items-center gap-2.5">
@@ -98,8 +99,12 @@ export function Hero() {
               <div className="mt-5 rounded-2xl bg-muted/40 p-4 border border-border/40">
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="text-xs text-muted-foreground">Total Campaign Reach</p>
-                    <p className="text-2xl font-bold font-display text-foreground">5,842,190</p>
+                    <p className="text-xs text-muted-foreground">
+                      Total Campaign Reach
+                    </p>
+                    <p className="text-2xl font-bold font-display text-foreground">
+                      5,842,190
+                    </p>
                   </div>
                   <div className="flex items-center gap-1 text-emerald-400 text-xs font-semibold bg-emerald-500/10 px-2 py-1 rounded-md">
                     <TrendingUp className="h-3.5 w-3.5" /> +42.8%
@@ -134,16 +139,24 @@ export function Hero() {
                   </div>
                   <div>
                     <p className="text-xs font-semibold">Creator Matching</p>
-                    <p className="text-[11px] text-muted-foreground">10,000+ Profiles Scanned</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      10,000+ Profiles Scanned
+                    </p>
                   </div>
                 </div>
-                <span className="text-xs font-bold text-emerald-400">Instant Match</span>
+                <span className="text-xs font-bold text-emerald-400">
+                  Instant Match
+                </span>
               </div>
 
               {/* Floating Badge 1: Ananya K. Creator Card */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="absolute -top-6 -right-6 hidden sm:flex items-center gap-3 rounded-2xl border border-white/15 bg-card/90 p-3 shadow-xl backdrop-blur-md"
               >
                 <div className="relative">
@@ -159,28 +172,36 @@ export function Hero() {
                     <span className="text-xs font-semibold">Ananya K.</span>
                     <BadgeCheck className="h-3.5 w-3.5 text-primary" />
                   </div>
-                  <span className="text-[10px] text-muted-foreground">428K Followers • Fashion</span>
+                  <span className="text-[10px] text-muted-foreground">
+                    428K Followers • Fashion
+                  </span>
                 </div>
               </motion.div>
 
               {/* Floating Badge 2: AI Match Rating Badge */}
               <motion.div
                 animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 4.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="absolute -bottom-6 -left-6 hidden sm:flex items-center gap-2.5 rounded-2xl border border-primary/30 bg-card/95 px-4 py-3 shadow-glow backdrop-blur-md"
               >
                 <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary/20 text-primary">
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-foreground">99.4% Match Score</p>
-                  <p className="text-[10px] text-muted-foreground">High Engagement Fit</p>
+                  <p className="text-xs font-bold text-foreground">
+                    99.4% Match Score
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    High Engagement Fit
+                  </p>
                 </div>
               </motion.div>
-
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>

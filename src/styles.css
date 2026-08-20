@@ -97,12 +97,7 @@
   --chart-5: oklch(0.72 0.18 60);
 
   /* Gradients & shadows */
-  --gradient-brand: linear-gradient(
-    135deg,
-    #1d4ed8,
-    #4338ca 60%,
-    #3730a3
-  );
+  --gradient-brand: linear-gradient(135deg, #1d4ed8, #4338ca 60%, #3730a3);
   --gradient-brand-soft: linear-gradient(
     135deg,
     oklch(0.55 0.22 263 / 0.12),

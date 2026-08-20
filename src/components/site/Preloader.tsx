@@ -47,7 +47,8 @@ export function Preloader() {
   if (!shouldRun || stage === "done") return null;
 
   const showConnect = stage !== "dropTrendtide";
-  const isGlowing = stage === "glow" || stage === "reveal" || stage === "moveNav";
+  const isGlowing =
+    stage === "glow" || stage === "reveal" || stage === "moveNav";
 
   return (
     <AnimatePresence>
@@ -84,10 +85,10 @@ export function Preloader() {
               stage === "glow"
                 ? 1.06
                 : stage === "reveal"
-                ? 1.03
-                : stage === "moveNav"
-                ? 0.45
-                : 1,
+                  ? 1.03
+                  : stage === "moveNav"
+                    ? 0.45
+                    : 1,
             opacity: stage === "moveNav" ? 0 : 1,
           }}
           transition={{

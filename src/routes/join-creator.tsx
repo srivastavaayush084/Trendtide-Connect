@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useEffect } from "react";
 
-const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeW3h5M-v6ftUB9lVezqAv_o9RIWOimxyVT_-SMlsYAIj-uCg/viewform";
+const GOOGLE_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSeW3h5M-v6ftUB9lVezqAv_o9RIWOimxyVT_-SMlsYAIj-uCg/viewform";
 
 export const Route = createFileRoute("/join-creator")({
   head: () => ({

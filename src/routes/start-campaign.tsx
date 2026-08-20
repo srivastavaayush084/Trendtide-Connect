@@ -129,43 +129,68 @@ function StartCampaign() {
   const isStepValid = (stepNum: number): { valid: boolean; error?: string } => {
     switch (stepNum) {
       case 1:
-        if (!data.brandName.trim()) return { valid: false, error: "Please enter your brand name." };
-        if (!data.website.trim()) return { valid: false, error: "Please enter your website URL." };
-        if (!data.industry.trim()) return { valid: false, error: "Please enter your industry." };
-        if (!data.contact.trim()) return { valid: false, error: "Please enter contact person name." };
-        if (!data.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        if (!data.brandName.trim())
+          return { valid: false, error: "Please enter your brand name." };
+        if (!data.website.trim())
+          return { valid: false, error: "Please enter your website URL." };
+        if (!data.industry.trim())
+          return { valid: false, error: "Please enter your industry." };
+        if (!data.contact.trim())
+          return { valid: false, error: "Please enter contact person name." };
+        if (
+          !data.email.trim() ||
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)
+        ) {
           return { valid: false, error: "Please enter a valid email address." };
         }
         if (!/^\d{10}$/.test(data.phone)) {
-          return { valid: false, error: "Please enter a valid 10-digit phone number." };
+          return {
+            valid: false,
+            error: "Please enter a valid 10-digit phone number.",
+          };
         }
         return { valid: true };
       case 2:
-        if (!data.objective) return { valid: false, error: "Please select a campaign objective." };
+        if (!data.objective)
+          return { valid: false, error: "Please select a campaign objective." };
         return { valid: true };
       case 3:
         if (!data.budget || data.budget === "Custom" || !data.budget.trim()) {
-          return { valid: false, error: "Please select or enter your campaign budget." };
+          return {
+            valid: false,
+            error: "Please select or enter your campaign budget.",
+          };
         }
         return { valid: true };
       case 4:
         if (data.platforms.length === 0) {
-          return { valid: false, error: "Please select at least one platform." };
+          return {
+            valid: false,
+            error: "Please select at least one platform.",
+          };
         }
         return { valid: true };
       case 5:
         if (data.categories.length === 0) {
-          return { valid: false, error: "Please select at least one creator category." };
+          return {
+            valid: false,
+            error: "Please select at least one creator category.",
+          };
         }
         return { valid: true };
       case 6:
         if (data.languages.length === 0) {
-          return { valid: false, error: "Please select at least one target language." };
+          return {
+            valid: false,
+            error: "Please select at least one target language.",
+          };
         }
         return { valid: true };
       case 7:
-        if (!data.state) return { valid: false, error: "Please select a target state." };
-        if (!data.place) return { valid: false, error: "Please select a region/place." };
+        if (!data.state)
+          return { valid: false, error: "Please select a target state." };
+        if (!data.place)
+          return { valid: false, error: "Please select a region/place." };
         return { valid: true };
       default:
         return { valid: true };
@@ -195,7 +220,8 @@ function StartCampaign() {
     } catch (err: any) {
       console.error("Email send failed:", err);
       toast.error(
-        err?.message || "Something went wrong sending your campaign. Please try again or email us directly.",
+        err?.message ||
+          "Something went wrong sending your campaign. Please try again or email us directly.",
       );
     } finally {
       setSubmitting(false);

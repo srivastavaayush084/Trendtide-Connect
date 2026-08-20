@@ -48,9 +48,10 @@ function tryServeStatic(req, res, pathname) {
       res.writeHead(200, {
         "Content-Type": contentType,
         "Content-Length": stats.size,
-        "Cache-Control": ext.startsWith(".js") || ext.startsWith(".css")
-          ? "public, max-age=31536000, immutable"
-          : "public, max-age=3600",
+        "Cache-Control":
+          ext.startsWith(".js") || ext.startsWith(".css")
+            ? "public, max-age=31536000, immutable"
+            : "public, max-age=3600",
       });
 
       fs.createReadStream(filePath).pipe(res);
@@ -128,6 +129,15 @@ async function sendWebResponse(res, webRes) {
 
 const server = http.createServer(async (req, res) => {
   const urlPath = req.url ? new URL(req.url, "http://localhost").pathname : "/";
+
+  // Fast health check endpoint
+  if (urlPath === "/health" || urlPath === "/api/health") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({ status: "ok", timestamp: new Date().toISOString() }),
+    );
+    return;
+  }
 
   // 1. Try static assets first
   if (urlPath !== "/" && tryServeStatic(req, res, urlPath)) {

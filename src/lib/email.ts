@@ -56,7 +56,9 @@ function getMailTransport(port: number) {
   const config = getServerConfig();
 
   if (!config.smtpUser || !config.smtpPass) {
-    console.error("[SMTP ERROR] Missing SMTP_USER or SMTP_PASS environment variables.");
+    console.error(
+      "[SMTP ERROR] Missing SMTP_USER or SMTP_PASS environment variables.",
+    );
     throw new Error(
       "SMTP credentials are not configured in environment variables.",
     );
@@ -103,7 +105,11 @@ async function sendMailWithResend(mailOptions: {
   }
 
   // Clean and sanitize sender address
-  let rawFrom = (process.env.RESEND_FROM_EMAIL || config.smtpFromEmail || "").trim();
+  let rawFrom = (
+    process.env.RESEND_FROM_EMAIL ||
+    config.smtpFromEmail ||
+    ""
+  ).trim();
   rawFrom = rawFrom.replace(/^["']|["']$/g, "").trim();
 
   let fromAddress = `"TrendTide Connect" <onboarding@resend.dev>`;
@@ -111,7 +117,10 @@ async function sendMailWithResend(mailOptions: {
     if (rawFrom.includes("<") && rawFrom.includes(">")) {
       fromAddress = rawFrom;
     } else if (rawFrom.includes("@")) {
-      const senderName = (config.smtpFromName || "TrendTide Connect").replace(/["']/g, "");
+      const senderName = (config.smtpFromName || "TrendTide Connect").replace(
+        /["']/g,
+        "",
+      );
       fromAddress = `${senderName} <${rawFrom}>`;
     }
   }
@@ -135,7 +144,9 @@ async function sendMailWithResend(mailOptions: {
   if (!response.ok) {
     console.error("[RESEND ERROR]", response.status, resData);
     throw new Error(
-      resData?.message || resData?.name || `Resend API error (${response.status})`,
+      resData?.message ||
+        resData?.name ||
+        `Resend API error (${response.status})`,
     );
   }
 

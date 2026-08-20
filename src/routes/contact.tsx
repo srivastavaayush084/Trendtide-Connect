@@ -51,7 +51,9 @@ function Contact() {
       setData({ name: "", email: "", message: "" });
     } catch (err: any) {
       console.error("Failed to send contact enquiry:", err);
-      toast.error(err?.message || "Failed to send your message. Please try again later.");
+      toast.error(
+        err?.message || "Failed to send your message. Please try again later.",
+      );
     } finally {
       setSubmitting(false);
     }
