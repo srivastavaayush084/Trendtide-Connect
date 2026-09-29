@@ -131,6 +131,20 @@ export function trackMetaPageView(path?: string): void {
 
   const currentPath = path || window.location.pathname;
 
+  // On first client run, check if base script in HTML head already fired initial PageView
+  if (lastTrackedPath === null) {
+    lastTrackedPath = currentPath;
+    isInitialized = true;
+    const fbqFn = (window as any).fbq;
+    if (!fbqFn) {
+      const initialized = initMetaPixel();
+      if (initialized && (window as any).fbq) {
+        (window as any).fbq("track", "PageView");
+      }
+    }
+    return;
+  }
+
   // Prevent duplicate PageView events for the same path
   if (lastTrackedPath === currentPath) {
     return;
