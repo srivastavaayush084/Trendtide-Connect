@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useEffect } from "react";
+import { trackMetaEvent } from "@/lib/metaPixel";
 
 const GOOGLE_FORM_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSeW3h5M-v6ftUB9lVezqAv_o9RIWOimxyVT_-SMlsYAIj-uCg/viewform";
@@ -14,6 +15,10 @@ export const Route = createFileRoute("/join-creator")({
 
 function JoinCreator() {
   useEffect(() => {
+    trackMetaEvent("CreatorApplicationStart", {
+      content_name: "Creator Application Redirect",
+      content_category: "Creator Signup",
+    });
     // auto-redirect to Google Form
     window.location.href = GOOGLE_FORM_URL;
   }, []);
@@ -25,7 +30,16 @@ function JoinCreator() {
         <p className="mt-4 text-muted-foreground">
           You are being redirected to the creator signup form. If you are not
           redirected,{" "}
-          <a className="text-primary" href={GOOGLE_FORM_URL}>
+          <a
+            className="text-primary"
+            href={GOOGLE_FORM_URL}
+            onClick={() => {
+              trackMetaEvent("CreatorApplicationStart", {
+                content_name: "Creator Application Link Click",
+                content_category: "Creator Signup",
+              });
+            }}
+          >
             click here
           </a>
           .

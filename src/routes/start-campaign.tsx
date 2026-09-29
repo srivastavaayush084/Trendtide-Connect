@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { sendAdminNotification, sendBrandConfirmation } from "@/lib/email";
+import { trackMetaEvent } from "@/lib/metaPixel";
 
 const steps = [
   { id: 1, label: "Brand", icon: Building2 },
@@ -216,6 +217,10 @@ function StartCampaign() {
     try {
       await sendAdminNotification({ data });
       await sendBrandConfirmation({ data });
+      trackMetaEvent("Lead", {
+        content_name: "Start Campaign",
+        content_category: "Campaign Inquiry",
+      });
       setSubmitted(true);
     } catch (err: any) {
       console.error("Email send failed:", err);

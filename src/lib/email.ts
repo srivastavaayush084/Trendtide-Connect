@@ -205,7 +205,8 @@ export const sendAdminNotification = createServerFn({ method: "POST" })
   .validator(campaignDataSchema)
   .handler(async ({ data }) => {
     const config = getServerConfig();
-    const adminTarget = config.adminEmail || config.smtpUser;
+    const adminTarget =
+      config.adminEmail || config.smtpUser || "info@trendtideconnect.com";
 
     const mailOptions = {
       from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
@@ -277,7 +278,8 @@ export const sendContactEnquiry = createServerFn({ method: "POST" })
   .validator(contactDataSchema)
   .handler(async ({ data }) => {
     const config = getServerConfig();
-    const adminTarget = config.adminEmail || config.smtpUser;
+    const adminTarget =
+      config.adminEmail || config.smtpUser || "info@trendtideconnect.com";
     const mailOptions = {
       from: `"${config.smtpFromName}" <${config.smtpFromEmail || config.smtpUser}>`,
       to: adminTarget,

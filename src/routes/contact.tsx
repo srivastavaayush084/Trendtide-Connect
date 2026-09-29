@@ -8,6 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { sendContactEnquiry } from "@/lib/email";
+import { trackMetaEvent } from "@/lib/metaPixel";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -47,6 +48,10 @@ function Contact() {
     setSubmitting(true);
     try {
       await sendContactEnquiry({ data });
+      trackMetaEvent("Lead", {
+        content_name: "Contact Form",
+        content_category: "Contact Inquiry",
+      });
       toast.success("Thank you! Your message has been sent successfully.");
       setData({ name: "", email: "", message: "" });
     } catch (err: any) {
